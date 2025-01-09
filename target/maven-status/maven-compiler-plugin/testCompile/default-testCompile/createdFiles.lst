@@ -1,1 +1,4 @@
+com\h2\Controller\BookControllerTest.class
 com\h2\AppTest.class
+com\h2\repository\BookRepositoryTest.class
+com\h2\service\BookServiceTest.class

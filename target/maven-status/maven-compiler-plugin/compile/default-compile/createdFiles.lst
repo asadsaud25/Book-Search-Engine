@@ -1,2 +1,7 @@
 com\h2\HelloController.class
+com\h2\Controller\BookController.class
+com\h2\DbImporter.class
+com\h2\entity\Book.class
+com\h2\repository\BookRepository.class
 com\h2\App.class
+com\h2\service\BookService.class
