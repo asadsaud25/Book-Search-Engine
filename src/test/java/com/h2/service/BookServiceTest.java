@@ -35,4 +35,26 @@ public class BookServiceTest {
         List<Book> books = bookService.searchBooks(searchTerm);
         assertTrue(books.size() > 0);
     } 
+
+    @Test
+    void testAddBookWhenTitleIsEmpty() {
+        String title = "";
+        String author = "John Doe";
+        assertThrows(IllegalArgumentException.class, () -> bookService.addBook(title, author));
+    }
+
+    @Test
+    void testAddBookWhenAuthorIsEmpty() {
+        String title = "Spring Boot";
+        String author = "";
+        assertThrows(IllegalArgumentException.class, () -> bookService.addBook(title, author));
+    }
+
+    @Test   
+    void testAddBookWhenTitleAndAuthorAreValid() {
+        String title = "Spring Boot";
+        String author = "John Doe";
+        Book book = bookService.addBook(title, author);
+        assertTrue(book.getBookId() > 0);
+    }
 }

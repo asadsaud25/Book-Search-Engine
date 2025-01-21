@@ -19,4 +19,17 @@ public class BookService {
         }
         return bookRepository.searchBooks(searchTerm);
     }
+
+    public Book addBook(String title, String author) {
+        if(title == null || title.isEmpty()) {
+            throw new IllegalArgumentException("Title cannot be null or empty");
+        }
+        if(author == null || author.isEmpty()) {
+            throw new IllegalArgumentException("Author cannot be null or empty");
+        }
+        Book book = new Book();
+        book.setTitle(title);
+        book.setAuthor(author);
+        return bookRepository.addBook(title, author);
+    }
 }
