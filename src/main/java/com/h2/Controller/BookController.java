@@ -24,8 +24,9 @@ public class BookController {
     }
 
     @PostMapping("/add")
-    public Book addBook(@RequestParam String title, @RequestParam String author) {
-        return bookService.addBook(title, author);
+    public Book addBook(@RequestParam String title, @RequestParam String description, @RequestParam String isbn) {
+        return bookService.addBook(title, description, isbn);
     }
-    
+    // localhost:8080/books/search?searchTerm=java
+    // localhost:8080/books/add?title=Java&description=JavaProgramming&isbn=1234567890
 }

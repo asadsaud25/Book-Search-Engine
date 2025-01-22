@@ -39,22 +39,31 @@ public class BookServiceTest {
     @Test
     void testAddBookWhenTitleIsEmpty() {
         String title = "";
-        String author = "John Doe";
-        assertThrows(IllegalArgumentException.class, () -> bookService.addBook(title, author));
+        String description = "A book on algorithms";
+        String isbn = "1234567890";
+        assertThrows(IllegalArgumentException.class, () -> bookService.addBook(title, description, isbn));
     }
 
     @Test
-    void testAddBookWhenAuthorIsEmpty() {
-        String title = "Spring Boot";
-        String author = "";
-        assertThrows(IllegalArgumentException.class, () -> bookService.addBook(title, author));
+    void testAddBookWhenDescriptionIsEmpty() {
+        String title = "Algorithms";
+        String description = "";
+        String isbn = "1234567890";
+        assertThrows(IllegalArgumentException.class, () -> bookService.addBook(title, description, isbn));
     }
-
-    @Test   
-    void testAddBookWhenTitleAndAuthorAreValid() {
-        String title = "Spring Boot";
-        String author = "John Doe";
-        Book book = bookService.addBook(title, author);
+    @Test
+    void testAddBookWhenIsbnIsEmpty() {
+        String title = "Algorithms";
+        String description = "A book on algorithms";
+        String isbn = "";
+        assertThrows(IllegalArgumentException.class, () -> bookService.addBook(title, description, isbn));
+    }
+    @Test
+    void testAddBookWhenAllFieldsAreValid() {
+        String title = "Algorithms";
+        String description = "A book on algorithms";
+        String isbn = "1234567890";
+        Book book = bookService.addBook(title, description, isbn);
         assertTrue(book.getBookId() > 0);
     }
 }

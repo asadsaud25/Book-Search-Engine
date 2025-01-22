@@ -14,22 +14,28 @@ public class BookService {
     private BookRepository bookRepository;
     
     public List<Book> searchBooks(String searchTerm) {
-        if(searchTerm == null || searchTerm.isEmpty()) {
+        if (searchTerm == null || searchTerm.isEmpty()) {
             throw new IllegalArgumentException("Search term cannot be null or empty");
         }
         return bookRepository.searchBooks(searchTerm);
     }
 
-    public Book addBook(String title, String author) {
-        if(title == null || title.isEmpty()) {
+    public Book addBook(String title, String description, String isbn) {
+        if (title == null || title.isEmpty()) {
             throw new IllegalArgumentException("Title cannot be null or empty");
         }
-        if(author == null || author.isEmpty()) {
-            throw new IllegalArgumentException("Author cannot be null or empty");
+        if (description == null || description.isEmpty()) {
+            throw new IllegalArgumentException("Description cannot be null or empty");
         }
+        if (isbn == null || isbn.isEmpty()) {
+            throw new IllegalArgumentException("ISBN cannot be null or empty");
+        }
+        
         Book book = new Book();
         book.setTitle(title);
-        book.setAuthor(author);
-        return bookRepository.addBook(title, author);
+        book.setDescription(description);
+        book.setIsbn(isbn);
+
+        return bookRepository.save(book); // Use JPA's save method
     }
 }
