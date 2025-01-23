@@ -1,5 +1,6 @@
 package com.h2.service;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.h2.DTO.BookDTO;
 import com.h2.entity.Book;
 
 @SpringBootTest
@@ -16,6 +18,7 @@ public class BookServiceTest {
     @Autowired
     private BookService bookService;
 
+    // Test cases for searchBooks method
     @Test
     void testSearchBooksWhenTermIsEmpty() {
         String searchTerm = "";
@@ -36,34 +39,45 @@ public class BookServiceTest {
         assertTrue(books.size() > 0);
     } 
 
+    // Test cases for addBook method
+    
     @Test
     void testAddBookWhenTitleIsEmpty() {
-        String title = "";
-        String description = "A book on algorithms";
-        String isbn = "1234567890";
-        assertThrows(IllegalArgumentException.class, () -> bookService.addBook(title, description, isbn));
+        BookDTO bookDTO = new BookDTO();
+        bookDTO.setTitle("");
+        bookDTO.setDescription("A book on algorithms");
+        bookDTO.setIsbn("1234567890");
+        assertThrows(IllegalArgumentException.class, () -> bookService.addBook(bookDTO));
     }
 
     @Test
     void testAddBookWhenDescriptionIsEmpty() {
-        String title = "Algorithms";
-        String description = "";
-        String isbn = "1234567890";
-        assertThrows(IllegalArgumentException.class, () -> bookService.addBook(title, description, isbn));
+        BookDTO bookDTO = new BookDTO();
+        bookDTO.setTitle("Algorithms");
+        bookDTO.setDescription("");
+        bookDTO.setIsbn("1234567890");
+        assertThrows(IllegalArgumentException.class, () -> bookService.addBook(bookDTO));
     }
+
     @Test
     void testAddBookWhenIsbnIsEmpty() {
-        String title = "Algorithms";
-        String description = "A book on algorithms";
-        String isbn = "";
-        assertThrows(IllegalArgumentException.class, () -> bookService.addBook(title, description, isbn));
+        BookDTO bookDTO = new BookDTO();
+        bookDTO.setTitle("Algorithms");
+        bookDTO.setDescription("A book on algorithms");
+        bookDTO.setIsbn("");
+        assertThrows(IllegalArgumentException.class, () -> bookService.addBook(bookDTO));
     }
+
     @Test
     void testAddBookWhenAllFieldsAreValid() {
-        String title = "Algorithms";
-        String description = "A book on algorithms";
-        String isbn = "1234567890";
-        Book book = bookService.addBook(title, description, isbn);
+        BookDTO bookDTO = new BookDTO();
+        bookDTO.setTitle("Algorithms");
+        bookDTO.setDescription("A book on algorithms");
+        bookDTO.setIsbn("1234567890");
+        Book book = bookService.addBook(bookDTO);
+        assertNotNull(book);
         assertTrue(book.getBookId() > 0);
     }
+
+    
 }

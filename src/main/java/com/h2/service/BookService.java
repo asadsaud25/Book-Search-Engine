@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.h2.DTO.BookDTO;
 import com.h2.entity.Book;
 import com.h2.repository.BookRepository;
 
@@ -20,22 +21,35 @@ public class BookService {
         return bookRepository.searchBooks(searchTerm);
     }
 
-    public Book addBook(String title, String description, String isbn) {
-        if (title == null || title.isEmpty()) {
+    public Book addBook(BookDTO bookDTO) {
+        if(bookDTO.getTitle() == null || bookDTO.getTitle().isEmpty()) {
             throw new IllegalArgumentException("Title cannot be null or empty");
         }
-        if (description == null || description.isEmpty()) {
+        if(bookDTO.getDescription() == null || bookDTO.getDescription().isEmpty()) {
             throw new IllegalArgumentException("Description cannot be null or empty");
         }
-        if (isbn == null || isbn.isEmpty()) {
+        if(bookDTO.getIsbn() == null || bookDTO.getIsbn().isEmpty()) {
             throw new IllegalArgumentException("ISBN cannot be null or empty");
         }
-        
-        Book book = new Book();
-        book.setTitle(title);
-        book.setDescription(description);
-        book.setIsbn(isbn);
 
-        return bookRepository.save(book); // Use JPA's save method
+        // Convert BookDTO to Book
+        Book book = new Book();
+        book.setTitle(bookDTO.getTitle());
+        book.setDescription(bookDTO.getDescription());
+        book.setIsbn(bookDTO.getIsbn());
+
+        // Optional fields
+        book.setRating(bookDTO.getRating());
+        book.setAuthor(bookDTO.getAuthor());
+        book.setPages(bookDTO.getPages());
+        book.setPrice(bookDTO.getPrice());
+        book.setPublisher(bookDTO.getPublisher());
+        book.setLanguage(bookDTO.getLanguage());
+        book.setEdition(bookDTO.getEdition());
+        book.setPublishDate(bookDTO.getPublishDate());
+        book.setFirstPublishDate(bookDTO.getFirstPublishDate());
+
+        return bookRepository.save(book);
+
     }
 }
