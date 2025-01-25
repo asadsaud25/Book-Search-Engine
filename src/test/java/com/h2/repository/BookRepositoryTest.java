@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import com.h2.DTO.BookWithAuthorsDTO;
 import com.h2.entity.Book;
 
 @DataJpaTest
@@ -20,10 +21,10 @@ public class BookRepositoryTest {
 
     @Test
     void testSearBooks() {
-        List<Book> books = bookRepository.searchBooks("algorithms");
+        List<BookWithAuthorsDTO> books = bookRepository.searchBooks("algorithms");
         assertFalse(books.isEmpty());
 
-        for(Book book : books) {
+        for(BookWithAuthorsDTO book : books) {
             System.out.println(">>> Book Title"+book.getTitle());
         }
 

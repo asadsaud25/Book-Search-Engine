@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.h2.DTO.BookDTO;
+import com.h2.DTO.BookWithAuthorsDTO;
 import com.h2.entity.Book;
 
 @SpringBootTest
@@ -35,7 +36,7 @@ public class BookServiceTest {
     @Test
     void testSearchBooksWhenTermIsValid() {
         String searchTerm = "algorithm";
-        List<Book> books = bookService.searchBooks(searchTerm);
+        List<BookWithAuthorsDTO> books = bookService.searchBooks(searchTerm);
         assertTrue(books.size() > 0);
     } 
 

@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.ResponseEntity;
 
-import com.h2.entity.Book;
+import com.h2.DTO.BookWithAuthorsDTO;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class BookControllerTest {
@@ -19,13 +19,13 @@ public class BookControllerTest {
     @Test
     void testSearchBooks() {
         String searchTerm = "algorithm";
-        ResponseEntity<Book[]> response = restTemplate.getForEntity("/books/search?searchTerm={searchTerm}", Book[].class, searchTerm);
+        ResponseEntity<BookWithAuthorsDTO[]> response = restTemplate.getForEntity("/books/search?searchTerm={searchTerm}", BookWithAuthorsDTO[].class, searchTerm);
 
-        Book[] books = response.getBody();
+        BookWithAuthorsDTO[] books = response.getBody();
         assertNotNull(books);
         assertTrue(books.length > 0);
 
-        for(Book book : books) {
+        for(BookWithAuthorsDTO book : books) {
             System.out.println(book);
         }
     }

@@ -2,7 +2,12 @@ C:\Users\asads\OneDrive\Desktop\Learnings\SpringBoot\BookSearch\src\main\java\co
 C:\Users\asads\OneDrive\Desktop\Learnings\SpringBoot\BookSearch\src\main\java\com\h2\Controller\BookController.java
 C:\Users\asads\OneDrive\Desktop\Learnings\SpringBoot\BookSearch\src\main\java\com\h2\DbImporter.java
 C:\Users\asads\OneDrive\Desktop\Learnings\SpringBoot\BookSearch\src\main\java\com\h2\DTO\BookDTO.java
+C:\Users\asads\OneDrive\Desktop\Learnings\SpringBoot\BookSearch\src\main\java\com\h2\DTO\BookWithAuthorsDTO.java
+C:\Users\asads\OneDrive\Desktop\Learnings\SpringBoot\BookSearch\src\main\java\com\h2\entity\Author.java
 C:\Users\asads\OneDrive\Desktop\Learnings\SpringBoot\BookSearch\src\main\java\com\h2\entity\Book.java
+C:\Users\asads\OneDrive\Desktop\Learnings\SpringBoot\BookSearch\src\main\java\com\h2\entity\BookAuthor.java
 C:\Users\asads\OneDrive\Desktop\Learnings\SpringBoot\BookSearch\src\main\java\com\h2\HelloController.java
+C:\Users\asads\OneDrive\Desktop\Learnings\SpringBoot\BookSearch\src\main\java\com\h2\repository\AuthorRepository.java
 C:\Users\asads\OneDrive\Desktop\Learnings\SpringBoot\BookSearch\src\main\java\com\h2\repository\BookRepository.java
+C:\Users\asads\OneDrive\Desktop\Learnings\SpringBoot\BookSearch\src\main\java\com\h2\service\AuthorService.java
 C:\Users\asads\OneDrive\Desktop\Learnings\SpringBoot\BookSearch\src\main\java\com\h2\service\BookService.java

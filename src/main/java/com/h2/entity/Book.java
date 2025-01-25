@@ -2,11 +2,15 @@ package com.h2.entity;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
@@ -28,13 +32,16 @@ public class Book {
     private String publisher;
     private Date publishDate;
     private Date firstPublishDate;
-    private String author;
+    // private String author;
     private BigDecimal likedPercent;
     private BigDecimal price;
 
     @Column(name = "search_vector", columnDefinition = "tsvector")
     @Transient
     private String searchVector; // Optional: Exclude from persistence
+
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
+    private List<BookAuthor> authors;
 
     // Getters and Setters
     public Long getBookId() {
@@ -133,13 +140,13 @@ public class Book {
         this.firstPublishDate = firstPublishDate;
     }
 
-    public String getAuthor() {
-        return author;
-    }
+    // public String getAuthor() {
+    //     return author;
+    // }
 
-    public void setAuthor(String author) {
-        this.author = author;
-    }
+    // public void setAuthor(String author) {
+    //     this.author = author;
+    // }
 
     public BigDecimal getLikedPercent() {
         return likedPercent;
@@ -159,6 +166,11 @@ public class Book {
 
     public String getSearchVector() {
         return searchVector;
+    }
+
+    public void setAuthors(List<BookAuthor> bookAuthors) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setAuthors'");
     }
     
 }

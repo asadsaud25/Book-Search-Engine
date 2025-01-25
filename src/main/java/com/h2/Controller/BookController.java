@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.h2.DTO.BookDTO;
+import com.h2.DTO.BookWithAuthorsDTO;
 import com.h2.entity.Book;
 import com.h2.service.BookService;
 
@@ -21,7 +22,7 @@ public class BookController {
     private BookService bookService;
 
     @GetMapping("/search")
-    public List<Book> searchBooks(@RequestParam String searchTerm) {
+    public List<BookWithAuthorsDTO> searchBooks(@RequestParam String searchTerm) {
         return bookService.searchBooks(searchTerm);
     }
 
@@ -30,7 +31,7 @@ public class BookController {
         return bookService.addBook(bookDTO);
     }
 
-    // localhost:8080/books/search?searchTerm=java
+    // localhost:8080/books/search?searchTerm=algorithm
     // localhost:8080/books/add?title=Java&description=JavaProgramming&isbn=1234567890
     // localhost:8080/books/add?title=Java&description=JavaProgramming&isbn=1234567890&rating=4.5&language=English&bookFormat=PDF&edition=1st&pages=500&publisher=Oracle&publishDate=2021-01-01&firstPublishDate=2020-01-01&author=JamesGosling&likedPercent=90&price=100.00
 }
