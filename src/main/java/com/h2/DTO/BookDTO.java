@@ -113,6 +113,9 @@ public class BookDTO {
     public void setAuthors(List<String> authors) {
         this.authors = authors;
     }
+    public void setRating(double d) {
+        this.rating = BigDecimal.valueOf(d);
+    }
     
 
 

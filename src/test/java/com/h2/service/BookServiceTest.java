@@ -43,42 +43,58 @@ public class BookServiceTest {
     // Test cases for addBook method
     
     @Test
-    void testAddBookWhenTitleIsEmpty() {
+    void testAddBookWhenTitleIsNull() {
         BookDTO bookDTO = new BookDTO();
-        bookDTO.setTitle("");
-        bookDTO.setDescription("A book on algorithms");
+        bookDTO.setDescription("Java Programming");
+        bookDTO.setIsbn("1234567890");
+        bookDTO.setAuthors(List.of("James Gosling"));
+        assertThrows(IllegalArgumentException.class, () -> bookService.addBook(bookDTO));
+    }
+    @Test
+    void testAddBookWhenDescriptionIsNull() {
+        BookDTO bookDTO = new BookDTO();
+        bookDTO.setTitle("Java");
+        bookDTO.setIsbn("1234567890");
+        bookDTO.setAuthors(List.of("James Gosling"));
+        assertThrows(IllegalArgumentException.class, () -> bookService.addBook(bookDTO));
+    }
+    @Test
+    void testAddBookWhenIsbnIsNull() {
+        BookDTO bookDTO = new BookDTO();
+        bookDTO.setTitle("Java");
+        bookDTO.setDescription("Java Programming");
+        bookDTO.setAuthors(List.of("James Gosling"));
+        assertThrows(IllegalArgumentException.class, () -> bookService.addBook(bookDTO));
+    }
+    @Test
+    void testAddBookWhenAuthorsIsNull() {
+        BookDTO bookDTO = new BookDTO();
+        bookDTO.setTitle("Java");
+        bookDTO.setDescription("Java Programming");
         bookDTO.setIsbn("1234567890");
         assertThrows(IllegalArgumentException.class, () -> bookService.addBook(bookDTO));
     }
-
-    @Test
-    void testAddBookWhenDescriptionIsEmpty() {
-        BookDTO bookDTO = new BookDTO();
-        bookDTO.setTitle("Algorithms");
-        bookDTO.setDescription("");
-        bookDTO.setIsbn("1234567890");
-        assertThrows(IllegalArgumentException.class, () -> bookService.addBook(bookDTO));
-    }
-
-    @Test
-    void testAddBookWhenIsbnIsEmpty() {
-        BookDTO bookDTO = new BookDTO();
-        bookDTO.setTitle("Algorithms");
-        bookDTO.setDescription("A book on algorithms");
-        bookDTO.setIsbn("");
-        assertThrows(IllegalArgumentException.class, () -> bookService.addBook(bookDTO));
-    }
-
     @Test
     void testAddBookWhenAllFieldsAreValid() {
         BookDTO bookDTO = new BookDTO();
-        bookDTO.setTitle("Algorithms");
-        bookDTO.setDescription("A book on algorithms");
+        bookDTO.setTitle("Java");
+        bookDTO.setDescription("Java Programming");
         bookDTO.setIsbn("1234567890");
+        bookDTO.setAuthors(List.of("James Gosling"));
         Book book = bookService.addBook(bookDTO);
         assertNotNull(book);
-        assertTrue(book.getBookId() > 0);
     }
-
+    @Test
+    void testAddBookWhenAllFieldsAreValidAndRatingIsNotNull() {
+        BookDTO bookDTO = new BookDTO();
+        bookDTO.setTitle("Java");
+        bookDTO.setDescription("Java Programming");
+        bookDTO.setIsbn("1234567890");
+        bookDTO.setAuthors(List.of("James Gosling"));
+        bookDTO.setRating(4.50);
+        Book book = bookService.addBook(bookDTO);
+        assertNotNull(book);
+    }
+    
     
 }

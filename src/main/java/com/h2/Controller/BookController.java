@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.h2.DTO.BookDTO;
 import com.h2.DTO.BookWithAuthorsDTO;
+import com.h2.Exception.BadRequestException;
+import com.h2.Exception.NotFoundException;
 import com.h2.entity.Book;
 import com.h2.service.BookService;
 
@@ -23,7 +25,23 @@ public class BookController {
 
     @GetMapping("/search")
     public List<BookWithAuthorsDTO> searchBooks(@RequestParam String searchTerm) {
-        return bookService.searchBooks(searchTerm);
+        if (searchTerm == null || searchTerm.isEmpty()) {
+            throw new BadRequestException("Search term cannot be null or empty");
+        }
+        if (searchTerm.length() < 3) {
+            throw new BadRequestException("Search term must be at least 3 characters long");
+        }
+        if (searchTerm.length() > 100) {
+            throw new BadRequestException("Search term must be at most 100 characters long");
+        }
+        if (searchTerm.contains("  ")) {
+            throw new BadRequestException("Search term cannot contain consecutive spaces");
+        }
+        List<BookWithAuthorsDTO> books = bookService.searchBooks(searchTerm);
+        if (books.isEmpty()) {
+            throw new NotFoundException("No books found for the search term: " + searchTerm);
+        }
+        return books;
     }
 
     @PostMapping("/add")

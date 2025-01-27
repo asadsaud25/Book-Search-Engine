@@ -10,7 +10,9 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
@@ -19,20 +21,24 @@ import jakarta.persistence.Transient;
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long bookId;
+    @Column(name = "book_id")
+    private Long id;
 
     private String title;
     private BigDecimal rating;
     private String description;
     private String language;
     private String isbn;
+    @Column(name = "book_format")
     private String bookFormat;
     private String edition;
     private Integer pages;
     private String publisher;
+    @Column(name = "publish_date")
     private Date publishDate;
+    @Column(name = "first_publish_date")
     private Date firstPublishDate;
-    // private String author;
+    @Column(name = "liked_percent")
     private BigDecimal likedPercent;
     private BigDecimal price;
 
@@ -40,16 +46,21 @@ public class Book {
     @Transient
     private String searchVector; // Optional: Exclude from persistence
 
-    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
-    private List<BookAuthor> authors;
+    @ManyToMany
+    @JoinTable(
+        name = "books_authors",
+        joinColumns = @JoinColumn(name = "book_id"),
+        inverseJoinColumns = @JoinColumn(name = "author_id")
+    )
+    private List<Author> authors;
 
     // Getters and Setters
-    public Long getBookId() {
-        return bookId;
+    public Long getId() {
+        return id;
     }
 
-    public void setBookId(Long bookId) {
-        this.bookId = bookId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -140,14 +151,6 @@ public class Book {
         this.firstPublishDate = firstPublishDate;
     }
 
-    // public String getAuthor() {
-    //     return author;
-    // }
-
-    // public void setAuthor(String author) {
-    //     this.author = author;
-    // }
-
     public BigDecimal getLikedPercent() {
         return likedPercent;
     }
@@ -168,9 +171,8 @@ public class Book {
         return searchVector;
     }
 
-    public void setAuthors(List<BookAuthor> bookAuthors) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setAuthors'");
+    public void setAuthors(List<Author> authors) {
+        this.authors = authors;
     }
     
 }

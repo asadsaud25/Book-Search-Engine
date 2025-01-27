@@ -5,7 +5,7 @@
 
 -- Create the books table
 CREATE TABLE books (
-    book_id SERIAL PRIMARY KEY,
+    SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     rating DECIMAL(2,1) NOT NULL,
     description TEXT NOT NULL,

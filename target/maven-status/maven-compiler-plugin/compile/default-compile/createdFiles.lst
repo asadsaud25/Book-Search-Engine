@@ -6,6 +6,7 @@ com\h2\service\BookService.class
 com\h2\entity\BookAuthor.class
 com\h2\HelloController.class
 com\h2\Controller\BookController.class
+com\h2\repository\BookAuthorRepository.class
 com\h2\DTO\BookWithAuthorsDTO.class
 com\h2\entity\Author.class
 com\h2\repository\BookRepository.class

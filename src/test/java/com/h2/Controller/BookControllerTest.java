@@ -29,4 +29,26 @@ public class BookControllerTest {
             System.out.println(book);
         }
     }
+
+    @Test
+    void testAddBook() {
+        ResponseEntity<BookWithAuthorsDTO> response = restTemplate.postForEntity("/books/add", null, BookWithAuthorsDTO.class);
+        BookWithAuthorsDTO book = response.getBody();
+        assertNotNull(book);
+        System.out.println(book);
+    }
+    @Test
+    void testAddBookWithDetails() {
+        ResponseEntity<BookWithAuthorsDTO> response = restTemplate.postForEntity("/books/add", null, BookWithAuthorsDTO.class);
+        BookWithAuthorsDTO book = response.getBody();
+        assertNotNull(book);
+        System.out.println(book);
+    }
+    @Test
+    void testAddBookWithDetailsAndAuthors() {
+        ResponseEntity<BookWithAuthorsDTO> response = restTemplate.postForEntity("/books/add", null, BookWithAuthorsDTO.class);
+        BookWithAuthorsDTO book = response.getBody();
+        assertNotNull(book);
+        System.out.println(book);
+    }
 }
