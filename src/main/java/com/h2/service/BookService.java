@@ -9,11 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.h2.DTO.BookDTO;
 import com.h2.DTO.BookWithAuthorsDTO;
+import com.h2.Exception.BadRequestException;
 import com.h2.entity.Author;
 import com.h2.entity.Book;
-import com.h2.entity.BookAuthor;
 import com.h2.repository.AuthorRepository;
-import com.h2.repository.BookAuthorRepository;
 import com.h2.repository.BookRepository;
 
 @Service
@@ -25,24 +24,25 @@ public class BookService {
     @Autowired
     private AuthorRepository authorRepository;
 
-    @Autowired
-    private BookAuthorRepository bookAuthorRepository;
-
     @Transactional
     public Book addBook(BookDTO bookDTO) {
         if (bookDTO.getTitle() == null || bookDTO.getTitle().isEmpty()) {
-            throw new IllegalArgumentException("Title cannot be null or empty");
+            throw new BadRequestException("Title cannot be null or empty");
         }
         if (bookDTO.getDescription() == null || bookDTO.getDescription().isEmpty()) {
-            throw new IllegalArgumentException("Description cannot be null or empty");
+            throw new BadRequestException("Description cannot be null or empty");
         }
         if (bookDTO.getIsbn() == null || bookDTO.getIsbn().isEmpty()) {
-            throw new IllegalArgumentException("ISBN cannot be null or empty");
+            throw new BadRequestException("ISBN cannot be null or empty");
         }
         if (bookDTO.getAuthors() == null || bookDTO.getAuthors().isEmpty()) {
-            throw new IllegalArgumentException("Authors cannot be null or empty");
+            throw new BadRequestException("Authors cannot be null or empty");
         }
-        
+
+        if (bookRepository.findByIsbn(bookDTO.getIsbn()).isPresent()) {
+            throw new BadRequestException("A book with this ISBN already exists");
+        }
+
         Book book = new Book();
         book.setTitle(bookDTO.getTitle());
         book.setRating(bookDTO.getRating());
@@ -75,7 +75,7 @@ public class BookService {
 
     public List<BookWithAuthorsDTO> searchBooks(String searchTerm) {
         if (searchTerm == null || searchTerm.isEmpty()) {
-            throw new IllegalArgumentException("Search term cannot be null or empty");
+            throw new BadRequestException("Search term cannot be null or empty");
         }
         return bookRepository.searchBooks(searchTerm);
     }

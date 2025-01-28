@@ -36,3 +36,5 @@ CREATE TABLE books_authors (
     FOREIGN KEY (book_id) REFERENCES books (book_id),
     FOREIGN KEY (author_id) REFERENCES authors (author_id)
 );
+
+-- ALTER TABLE books ADD CONSTRAINT unique_isbn UNIQUE (isbn);
