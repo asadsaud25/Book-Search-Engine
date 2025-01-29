@@ -18,10 +18,13 @@ public class BookWithAuthorsDTO {
     private Date firstPublishDate;
     private BigDecimal likedPercent;
     private BigDecimal price;
-    private String authors; // This will hold the STRING_AGG result
+    private String authors;
+    private String searchVector; 
 
-    // Constructor with 15 parameters
-    public BookWithAuthorsDTO(Long bookId, String title, BigDecimal rating, String description, String language, String isbn, String bookFormat, String edition, Integer pages, String publisher, Date publishDate, Date firstPublishDate, BigDecimal likedPercent, BigDecimal price, String authors) {
+    // Constructor with all fields
+    public BookWithAuthorsDTO(Long bookId, String title, BigDecimal rating, String description, String language, String isbn, 
+                              String bookFormat, String edition, Integer pages, String publisher, Date publishDate, 
+                              Date firstPublishDate, BigDecimal likedPercent, BigDecimal price, String authors, String searchVector) {
         this.bookId = bookId;
         this.title = title;
         this.rating = rating;
@@ -37,11 +40,16 @@ public class BookWithAuthorsDTO {
         this.likedPercent = likedPercent;
         this.price = price;
         this.authors = authors;
+        this.searchVector = searchVector; 
     }
-
+    
     // Getters and Setters
     public Long getBookId() {
         return bookId;
+    }
+    
+    public String getSearchVector() {
+        return searchVector;
     }
 
     public void setBookId(Long bookId) {

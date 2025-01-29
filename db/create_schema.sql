@@ -21,6 +21,11 @@ CREATE TABLE books (
     price DECIMAL(5,2) NOT NULL
 );
 
+-- for full text search
+UPDATE books SET search_vector = 
+setweight(to_tsvector('english', coalesce(title,'')), 'A') ||
+setweight(to_tsvector('english', coalesce(description,'')), 'B') ||
+setweight(to_tsvector('english', coalesce(isbn,'')), 'C');
 
 -- Create the authors table
 CREATE TABLE authors (
@@ -37,4 +42,67 @@ CREATE TABLE books_authors (
     FOREIGN KEY (author_id) REFERENCES authors (author_id)
 );
 
--- ALTER TABLE books ADD CONSTRAINT unique_isbn UNIQUE (isbn);
+CREATE OR REPLACE FUNCTION update_search_vector()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.search_vector := 
+    setweight(to_tsvector('english', coalesce(NEW.title, '')), 'A') ||
+    setweight(to_tsvector('english', coalesce(NEW.description, '')), 'B') ||
+    setweight(to_tsvector('english', coalesce(NEW.isbn, '')), 'C');
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER update_search_vector_trigger
+BEFORE INSERT OR UPDATE ON books
+FOR EACH ROW
+EXECUTE FUNCTION update_search_vector();
+
+-- INSERT INTO books (title, description, isbn)
+-- VALUES ('Test Book', 'This is a test description', '1234567890');
+
+-- SELECT title, description, isbn, search_vector
+-- FROM books
+-- WHERE title = 'Test Book';
+
+-- UPDATE books
+-- SET title = 'Updated Book Title'
+-- WHERE isbn = '1234567890';
+
+-- SELECT title, description, isbn, search_vector
+-- FROM books
+-- WHERE isbn = '1234567890';
+
+UPDATE books
+SET search_vector = 
+  setweight(to_tsvector('english', coalesce(title, '')), 'A') ||
+  setweight(to_tsvector('english', coalesce(description, '')), 'B') ||
+  setweight(to_tsvector('english', coalesce(isbn, '')), 'C');
+
+
+-- to restrict user to add books with same isbn
+ALTER TABLE books ADD CONSTRAINT unique_isbn UNIQUE (isbn); 
+
+-- for better better readability and maintainability.
+CREATE VIEW book_with_authors AS
+SELECT 
+    b.book_id AS bookId, 
+    b.title, 
+    b.rating, 
+    b.description, 
+    b.language, 
+    b.isbn, 
+    b.book_format AS bookFormat, 
+    b.edition, 
+    b.pages, 
+    b.publisher, 
+    b.publish_date AS publishDate, 
+    b.first_publish_date AS firstPublishDate, 
+    b.liked_percent AS likedPercent, 
+    b.price, 
+    b.search_vector::TEXT AS search_vector, 
+    STRING_AGG(a.name, ', ') AS authors
+FROM books b
+JOIN books_authors ba ON b.book_id = ba.book_id
+JOIN authors a ON ba.author_id = a.author_id
+GROUP BY b.book_id, b.search_vector;
