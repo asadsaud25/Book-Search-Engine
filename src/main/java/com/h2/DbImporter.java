@@ -73,14 +73,14 @@ public class DbImporter {
         return records;
     }
 
-    // Insert data into the database, including authors and book_authors tables
+    // Insert data into the database, including authors and books_authors tables
     private static void insertData(List<String[]> records) throws SQLException {
         Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 
         String insertAuthorSQL = "INSERT INTO authors (name) VALUES (?) ON CONFLICT (name) DO NOTHING RETURNING author_id";
         String selectAuthorSQL = "SELECT author_id FROM authors WHERE name = ?";
         String insertBookSQL = "INSERT INTO books (title, rating, description, language, isbn, book_format, edition, pages, publisher, publish_date, first_publish_date, liked_percent, price) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING book_id";
-        String insertBookAuthorSQL = "INSERT INTO book_authors (book_id, author_id) VALUES (?, ?)";
+        String insertBookAuthorSQL = "INSERT INTO books_authors (book_id, author_id) VALUES (?, ?)";
 
         conn.setAutoCommit(false);
 
@@ -170,7 +170,7 @@ public class DbImporter {
                 }
                 bookRS.close();
 
-                // Insert into book_authors
+                // Insert into books_authors
                 bookAuthorStmt.setInt(1, bookId);
                 bookAuthorStmt.setInt(2, authorId);
                 bookAuthorStmt.executeUpdate();

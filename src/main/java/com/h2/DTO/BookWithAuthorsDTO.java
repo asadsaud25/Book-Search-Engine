@@ -1,72 +1,64 @@
-package com.h2.entity;
+package com.h2.DTO;
 
 import java.math.BigDecimal;
 import java.sql.Date;
-import java.util.List;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
-
-@Entity
-@Table(name = "books")
-public class Book {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "book_id")
-    private Long id;
-
+public class BookWithAuthorsDTO {
+    private Long bookId;
     private String title;
     private BigDecimal rating;
     private String description;
     private String language;
-    @Column(name = "isbn", nullable = false, unique = true)
     private String isbn;
-
-    @Column(name = "book_format")
     private String bookFormat;
     private String edition;
     private Integer pages;
     private String publisher;
-    @Column(name = "publish_date")
     private Date publishDate;
-    @Column(name = "first_publish_date")
     private Date firstPublishDate;
-    @Column(name = "liked_percent")
     private BigDecimal likedPercent;
     private BigDecimal price;
+    private String authors;
+    private String searchVector; 
 
-    @Column(name = "search_vector", columnDefinition = "tsvector")
-    @Transient
-    private String searchVector; // Optional: Exclude from persistence
-
-    @ManyToMany
-    @JoinTable(
-        name = "books_authors",
-        joinColumns = @JoinColumn(name = "book_id"),
-        inverseJoinColumns = @JoinColumn(name = "author_id")
-    )
-    private List<Author> authors;
-
+    // Constructor with all fields
+    public BookWithAuthorsDTO(Long bookId, String title, BigDecimal rating, String description, String language, String isbn, 
+                              String bookFormat, String edition, Integer pages, String publisher, Date publishDate, 
+                              Date firstPublishDate, BigDecimal likedPercent, BigDecimal price, String authors, String searchVector) {
+        this.bookId = bookId;
+        this.title = title;
+        this.rating = rating;
+        this.description = description;
+        this.language = language;
+        this.isbn = isbn;
+        this.bookFormat = bookFormat;
+        this.edition = edition;
+        this.pages = pages;
+        this.publisher = publisher;
+        this.publishDate = publishDate;
+        this.firstPublishDate = firstPublishDate;
+        this.likedPercent = likedPercent;
+        this.price = price;
+        this.authors = authors;
+        this.searchVector = searchVector; 
+    }
+    
     // Getters and Setters
-    public Long getId() {
-        return id;
+    public Long getBookId() {
+        return bookId;
+    }
+    
+    public String getSearchVector() {
+        return searchVector;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setBookId(Long bookId) {
+        this.bookId = bookId;
     }
 
     public String getTitle() {
         return title;
-    }   
+    }
 
     public void setTitle(String title) {
         this.title = title;
@@ -168,12 +160,11 @@ public class Book {
         this.price = price;
     }
 
-    public String getSearchVector() {
-        return searchVector;
+    public String getAuthors() {
+        return authors;
     }
 
-    public void setAuthors(List<Author> authors) {
+    public void setAuthors(String authors) {
         this.authors = authors;
     }
-    
 }
