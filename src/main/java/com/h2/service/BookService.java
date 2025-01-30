@@ -2,6 +2,8 @@ package com.h2.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,10 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.h2.DTO.BookDTO;
 import com.h2.DTO.BookWithAuthorsDTO;
 import com.h2.Exception.BadRequestException;
+import com.h2.Exception.NotFoundException;
 import com.h2.entity.Author;
 import com.h2.entity.Book;
 import com.h2.repository.AuthorRepository;
 import com.h2.repository.BookRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class BookService {
@@ -79,4 +84,55 @@ public class BookService {
         }
         return bookRepository.searchBooks(searchTerm);
     }
+
+    public Book updateBook(BookDTO bookDTO, String isbn) {
+        // Find the book by ISBN
+        Book book = bookRepository.findByIsbn(isbn).orElseThrow(() -> 
+            new NotFoundException("Book with ISBN " + isbn + " not found"));
+
+        if (isValid(bookDTO.getTitle())) book.setTitle(bookDTO.getTitle());
+        if (isValid(bookDTO.getDescription())) book.setDescription(bookDTO.getDescription());
+        if (bookDTO.getRating() != null) book.setRating(bookDTO.getRating());
+        if (isValid(bookDTO.getLanguage())) book.setLanguage(bookDTO.getLanguage());
+        if (isValid(bookDTO.getBookFormat())) book.setBookFormat(bookDTO.getBookFormat());
+        if (isValid(bookDTO.getEdition())) book.setEdition(bookDTO.getEdition());
+        if (bookDTO.getPages() != null && bookDTO.getPages() > 0) book.setPages(bookDTO.getPages());
+        if (isValid(bookDTO.getPublisher())) book.setPublisher(bookDTO.getPublisher());
+        if (bookDTO.getPublishDate() != null) book.setPublishDate(bookDTO.getPublishDate());
+        if (bookDTO.getFirstPublishDate() != null) book.setFirstPublishDate(bookDTO.getFirstPublishDate());
+        if (bookDTO.getLikedPercent() != null) book.setLikedPercent(bookDTO.getLikedPercent());
+        if (bookDTO.getPrice() != null) book.setPrice(bookDTO.getPrice());
+
+        // ✅ Optimized Author Handling
+        if (bookDTO.getAuthors() != null && !bookDTO.getAuthors().isEmpty()) {
+            List<Author> authors = authorRepository.findByNameIn(bookDTO.getAuthors());
+            
+            // Create new authors if they don't exist
+            Set<String> existingAuthorNames = authors.stream()
+                .map(Author::getName)
+                .collect(Collectors.toSet());
+
+            List<Author> newAuthors = bookDTO.getAuthors().stream()
+                .filter(name -> !existingAuthorNames.contains(name))
+                .map(name -> {
+                    Author newAuthor = new Author();
+                    newAuthor.setName(name);
+                    return newAuthor;
+                })
+                .collect(Collectors.toList());
+
+            if (!newAuthors.isEmpty()) {
+                authors.addAll(authorRepository.saveAll(newAuthors));
+            }
+
+            book.setAuthors(authors);
+        }
+
+        return bookRepository.save(book);
+    }
+
+    private boolean isValid(String value) {
+        return value != null && !value.trim().isEmpty();
+    }
+
 }

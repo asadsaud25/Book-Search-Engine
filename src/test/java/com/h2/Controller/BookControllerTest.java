@@ -51,4 +51,11 @@ public class BookControllerTest {
         assertNotNull(book);
         System.out.println(book);
     }
+    @Test
+    void testUpdateBook() {
+        ResponseEntity<BookWithAuthorsDTO> response = restTemplate.postForEntity("/books/update", null, BookWithAuthorsDTO.class);
+        BookWithAuthorsDTO book = response.getBody();
+        assertNotNull(book);
+        System.out.println(book);
+    }
 }

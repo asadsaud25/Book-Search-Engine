@@ -100,8 +100,8 @@ SELECT
     b.first_publish_date AS firstPublishDate, 
     b.liked_percent AS likedPercent, 
     b.price, 
-    b.search_vector::TEXT AS search_vector, 
-    STRING_AGG(a.name, ', ') AS authors
+    STRING_AGG(a.name, ', ') AS authors,  
+    b.search_vector::text AS searchVector  
 FROM books b
 JOIN books_authors ba ON b.book_id = ba.book_id
 JOIN authors a ON ba.author_id = a.author_id

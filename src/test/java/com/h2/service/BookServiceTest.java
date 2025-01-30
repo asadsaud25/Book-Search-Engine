@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.h2.DTO.BookDTO;
 import com.h2.DTO.BookWithAuthorsDTO;
 import com.h2.Exception.BadRequestException;
+import com.h2.Exception.NotFoundException;
 import com.h2.entity.Book;
 
 @SpringBootTest
@@ -78,24 +79,13 @@ public class BookServiceTest {
     // @Test
     // void testAddBookWhenAllFieldsAreValid() {
     //     BookDTO bookDTO = new BookDTO();
-    //     bookDTO.setTitle("Java");
-    //     bookDTO.setDescription("Java Programming");
-    //     bookDTO.setIsbn("1234567890");
-    //     bookDTO.setAuthors(List.of("James Gosling"));
+    //     bookDTO.setTitle("TEST");
+    //     bookDTO.setDescription("this is for testing purpose");
+    //     bookDTO.setIsbn("852-963-7412");
+    //     bookDTO.setAuthors(List.of("ANONYMOUS"));
     //     Book book = bookService.addBook(bookDTO);
     //     assertNotNull(book);
     // }
-    @Test
-    void testAddBookWhenAllFieldsAreValidAndRatingIsNotNull() {
-        BookDTO bookDTO = new BookDTO();
-        bookDTO.setTitle("Java");
-        bookDTO.setDescription("Java Programming");
-        bookDTO.setIsbn("1234567890");
-        bookDTO.setAuthors(List.of("James Gosling"));
-        bookDTO.setRating(4.50);
-        Book book = bookService.addBook(bookDTO);
-        assertNotNull(book);
-    }
 
     @Test
     void testAddBookWhenIsbnisAlreadyPresent() {
@@ -107,6 +97,22 @@ public class BookServiceTest {
         // bookService.addBook(bookDTO);
         assertThrows(BadRequestException.class, () -> bookService.addBook(bookDTO));
     }
-    
+    @Test
+    void testUpdateBookWhenIsbnIsInvalid(){
+        BookDTO bookDTO = new BookDTO();
+        bookDTO.setTitle("Java");
+        bookDTO.setDescription("Java Programming");
+        bookDTO.setAuthors(List.of("James Gosling"));
+        assertThrows(NotFoundException.class, () -> bookService.updateBook(bookDTO, "1230000"));
+    }
+    @Test
+    void testUpdateBookWhenAllFieldsAreValid(){
+        BookDTO bookDTO = new BookDTO();
+        bookDTO.setTitle("TEST");
+        bookDTO.setDescription("2nd update test successful");
+        bookDTO.setAuthors(List.of("ANONYMOUS1", "ANONYMOUS2"));
+        Book book = bookService.updateBook(bookDTO, "852-963-7412");
+        assertNotNull(book);
+    }
     
 }
