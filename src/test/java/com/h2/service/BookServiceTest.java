@@ -26,15 +26,12 @@ public class BookServiceTest {
     void testSearchBooksWhenTermIsEmpty() {
         String searchTerm = "";
         assertThrows(BadRequestException.class, () -> bookService.searchBooks(searchTerm));
-
     }
-
     @Test
     void testSearchBooksWhenTermIsNull() {
         String searchTerm = null;
         assertThrows(BadRequestException.class, () -> bookService.searchBooks(searchTerm));
     }
-
     @Test
     void testSearchBooksWhenTermIsValid() {
         String searchTerm = "algorithm";
@@ -43,7 +40,6 @@ public class BookServiceTest {
     } 
 
     // Test cases for addBook method
-    
     @Test
     void testAddBookWhenTitleIsNull() {
         BookDTO bookDTO = new BookDTO();
@@ -76,17 +72,16 @@ public class BookServiceTest {
         bookDTO.setIsbn("1234567890");
         assertThrows(BadRequestException.class, () -> bookService.addBook(bookDTO));
     }
-    // @Test
-    // void testAddBookWhenAllFieldsAreValid() {
-    //     BookDTO bookDTO = new BookDTO();
-    //     bookDTO.setTitle("TEST");
-    //     bookDTO.setDescription("this is for testing purpose");
-    //     bookDTO.setIsbn("852-963-7412");
-    //     bookDTO.setAuthors(List.of("ANONYMOUS"));
-    //     Book book = bookService.addBook(bookDTO);
-    //     assertNotNull(book);
-    // }
-
+    @Test
+    void testAddBookWhenAllFieldsAreValid() {
+        BookDTO bookDTO = new BookDTO();
+        bookDTO.setTitle("TEST");
+        bookDTO.setDescription("this is for testing purpose");
+        bookDTO.setIsbn("852-963-7412");
+        bookDTO.setAuthors(List.of("ANONYMOUS"));
+        Book book = bookService.addBook(bookDTO);
+        assertNotNull(book);
+    }
     @Test
     void testAddBookWhenIsbnisAlreadyPresent() {
         BookDTO bookDTO = new BookDTO();
@@ -113,6 +108,15 @@ public class BookServiceTest {
         bookDTO.setAuthors(List.of("ANONYMOUS1", "ANONYMOUS2"));
         Book book = bookService.updateBook(bookDTO, "852-963-7412");
         assertNotNull(book);
+    }
+    @Test
+    void testDeleteBookWhenIsbnIsInvalid(){
+        assertThrows(NotFoundException.class, () -> bookService.deleteBook("1230000"));
+    }
+    @Test
+    void testDeleteBookWhenIsbnIsValid(){
+        boolean isDeleted = bookService.deleteBook("852-963-7412");
+        assertTrue(isDeleted);
     }
     
 }

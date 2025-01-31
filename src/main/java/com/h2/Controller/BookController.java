@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,8 +49,9 @@ public class BookController {
     }
 
     @PostMapping("/add")
-    public Book addBook(@RequestBody BookDTO bookDTO) {
-        return bookService.addBook(bookDTO);
+    public ResponseEntity<Book> addBook(@RequestBody BookDTO bookDTO) {
+        Book book = bookService.addBook(bookDTO);
+        return ResponseEntity.ok(book);
     }
 
     @PutMapping("/update/{isbn}")
@@ -62,7 +64,13 @@ public class BookController {
         return ResponseEntity.ok(updatedBook);
     }
 
-    // localhost:8080/books/search?searchTerm=algorithm
-    // localhost:8080/books/add?title=Java&description=JavaProgramming&isbn=1234567890
-    // localhost:8080/books/add?title=Java&description=JavaProgramming&isbn=1234567890&rating=4.5&language=English&bookFormat=PDF&edition=1st&pages=500&publisher=Oracle&publishDate=2021-01-01&firstPublishDate=2020-01-01&author=JamesGosling&likedPercent=90&price=100.00
+    @DeleteMapping("/delete/{isbn}")
+    public ResponseEntity<String> deleteBook(@PathVariable String isbn) {
+        boolean isDeleted = bookService.deleteBook(isbn);
+
+        if(!isDeleted) {
+            throw new NotFoundException("Book with ISBN: " + isbn + " not found");
+        }
+        return ResponseEntity.ok("Book with ISBN: " + isbn + " deleted successfully");
+    }
 }

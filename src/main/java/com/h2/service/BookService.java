@@ -18,8 +18,6 @@ import com.h2.entity.Book;
 import com.h2.repository.AuthorRepository;
 import com.h2.repository.BookRepository;
 
-import jakarta.persistence.EntityNotFoundException;
-
 @Service
 public class BookService {
 
@@ -96,14 +94,13 @@ public class BookService {
         if (isValid(bookDTO.getLanguage())) book.setLanguage(bookDTO.getLanguage());
         if (isValid(bookDTO.getBookFormat())) book.setBookFormat(bookDTO.getBookFormat());
         if (isValid(bookDTO.getEdition())) book.setEdition(bookDTO.getEdition());
-        if (bookDTO.getPages() != null && bookDTO.getPages() > 0) book.setPages(bookDTO.getPages());
+        if (bookDTO.getPages() != null) book.setPages(bookDTO.getPages());
         if (isValid(bookDTO.getPublisher())) book.setPublisher(bookDTO.getPublisher());
         if (bookDTO.getPublishDate() != null) book.setPublishDate(bookDTO.getPublishDate());
         if (bookDTO.getFirstPublishDate() != null) book.setFirstPublishDate(bookDTO.getFirstPublishDate());
         if (bookDTO.getLikedPercent() != null) book.setLikedPercent(bookDTO.getLikedPercent());
         if (bookDTO.getPrice() != null) book.setPrice(bookDTO.getPrice());
 
-        // ✅ Optimized Author Handling
         if (bookDTO.getAuthors() != null && !bookDTO.getAuthors().isEmpty()) {
             List<Author> authors = authorRepository.findByNameIn(bookDTO.getAuthors());
             
@@ -129,6 +126,13 @@ public class BookService {
         }
 
         return bookRepository.save(book);
+    }
+
+    public boolean deleteBook(String isbn) {
+        Book book = bookRepository.findByIsbn(isbn).orElseThrow(() -> 
+            new NotFoundException("Book with ISBN " + isbn + " not found"));
+        bookRepository.delete(book);
+        return true;
     }
 
     private boolean isValid(String value) {
