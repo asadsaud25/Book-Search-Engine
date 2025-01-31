@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.h2.DTO.BookDTO;
 import com.h2.DTO.BookWithAuthorsDTO;
 import com.h2.Exception.BadRequestException;
+import com.h2.Exception.NotFoundException;
 import com.h2.entity.Book;
 
 @SpringBootTest
@@ -25,15 +26,12 @@ public class BookServiceTest {
     void testSearchBooksWhenTermIsEmpty() {
         String searchTerm = "";
         assertThrows(BadRequestException.class, () -> bookService.searchBooks(searchTerm));
-
     }
-
     @Test
     void testSearchBooksWhenTermIsNull() {
         String searchTerm = null;
         assertThrows(BadRequestException.class, () -> bookService.searchBooks(searchTerm));
     }
-
     @Test
     void testSearchBooksWhenTermIsValid() {
         String searchTerm = "algorithm";
@@ -42,7 +40,6 @@ public class BookServiceTest {
     } 
 
     // Test cases for addBook method
-    
     @Test
     void testAddBookWhenTitleIsNull() {
         BookDTO bookDTO = new BookDTO();
@@ -75,28 +72,16 @@ public class BookServiceTest {
         bookDTO.setIsbn("1234567890");
         assertThrows(BadRequestException.class, () -> bookService.addBook(bookDTO));
     }
-    // @Test
-    // void testAddBookWhenAllFieldsAreValid() {
-    //     BookDTO bookDTO = new BookDTO();
-    //     bookDTO.setTitle("Java");
-    //     bookDTO.setDescription("Java Programming");
-    //     bookDTO.setIsbn("1234567890");
-    //     bookDTO.setAuthors(List.of("James Gosling"));
-    //     Book book = bookService.addBook(bookDTO);
-    //     assertNotNull(book);
-    // }
     @Test
-    void testAddBookWhenAllFieldsAreValidAndRatingIsNotNull() {
+    void testAddBookWhenAllFieldsAreValid() {
         BookDTO bookDTO = new BookDTO();
-        bookDTO.setTitle("Java");
-        bookDTO.setDescription("Java Programming");
-        bookDTO.setIsbn("1234567890");
-        bookDTO.setAuthors(List.of("James Gosling"));
-        bookDTO.setRating(4.50);
+        bookDTO.setTitle("TEST");
+        bookDTO.setDescription("this is for testing purpose");
+        bookDTO.setIsbn("852-963-7412");
+        bookDTO.setAuthors(List.of("ANONYMOUS"));
         Book book = bookService.addBook(bookDTO);
         assertNotNull(book);
     }
-
     @Test
     void testAddBookWhenIsbnisAlreadyPresent() {
         BookDTO bookDTO = new BookDTO();
@@ -107,6 +92,31 @@ public class BookServiceTest {
         // bookService.addBook(bookDTO);
         assertThrows(BadRequestException.class, () -> bookService.addBook(bookDTO));
     }
-    
+    @Test
+    void testUpdateBookWhenIsbnIsInvalid(){
+        BookDTO bookDTO = new BookDTO();
+        bookDTO.setTitle("Java");
+        bookDTO.setDescription("Java Programming");
+        bookDTO.setAuthors(List.of("James Gosling"));
+        assertThrows(NotFoundException.class, () -> bookService.updateBook(bookDTO, "1230000"));
+    }
+    @Test
+    void testUpdateBookWhenAllFieldsAreValid(){
+        BookDTO bookDTO = new BookDTO();
+        bookDTO.setTitle("TEST");
+        bookDTO.setDescription("2nd update test successful");
+        bookDTO.setAuthors(List.of("ANONYMOUS1", "ANONYMOUS2"));
+        Book book = bookService.updateBook(bookDTO, "852-963-7412");
+        assertNotNull(book);
+    }
+    @Test
+    void testDeleteBookWhenIsbnIsInvalid(){
+        assertThrows(NotFoundException.class, () -> bookService.deleteBook("1230000"));
+    }
+    @Test
+    void testDeleteBookWhenIsbnIsValid(){
+        boolean isDeleted = bookService.deleteBook("852-963-7412");
+        assertTrue(isDeleted);
+    }
     
 }

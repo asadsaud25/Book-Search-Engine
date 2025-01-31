@@ -3,8 +3,12 @@ package com.h2.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,11 +49,28 @@ public class BookController {
     }
 
     @PostMapping("/add")
-    public Book addBook(@RequestBody BookDTO bookDTO) {
-        return bookService.addBook(bookDTO);
+    public ResponseEntity<Book> addBook(@RequestBody BookDTO bookDTO) {
+        Book book = bookService.addBook(bookDTO);
+        return ResponseEntity.ok(book);
     }
 
-    // localhost:8080/books/search?searchTerm=algorithm
-    // localhost:8080/books/add?title=Java&description=JavaProgramming&isbn=1234567890
-    // localhost:8080/books/add?title=Java&description=JavaProgramming&isbn=1234567890&rating=4.5&language=English&bookFormat=PDF&edition=1st&pages=500&publisher=Oracle&publishDate=2021-01-01&firstPublishDate=2020-01-01&author=JamesGosling&likedPercent=90&price=100.00
+    @PutMapping("/update/{isbn}")
+    public ResponseEntity<Book> updateBook(@RequestBody BookDTO bookDTO, @PathVariable String isbn) {
+        Book updatedBook = bookService.updateBook(bookDTO, isbn);
+
+        if(updatedBook == null) {
+            throw new NotFoundException("Book with ISBN: " + isbn + " not found");
+        }
+        return ResponseEntity.ok(updatedBook);
+    }
+
+    @DeleteMapping("/delete/{isbn}")
+    public ResponseEntity<String> deleteBook(@PathVariable String isbn) {
+        boolean isDeleted = bookService.deleteBook(isbn);
+
+        if(!isDeleted) {
+            throw new NotFoundException("Book with ISBN: " + isbn + " not found");
+        }
+        return ResponseEntity.ok("Book with ISBN: " + isbn + " deleted successfully");
+    }
 }
