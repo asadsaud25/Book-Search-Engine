@@ -48,6 +48,36 @@ public class BookController {
         return books;
     }
 
+    @GetMapping("/search/{isbn}")
+    public BookWithAuthorsDTO searchBook(@PathVariable String isbn){ 
+        BookWithAuthorsDTO book = bookService.searchBook(isbn);
+        return book;
+
+    }
+
+    @GetMapping("/search/author")
+    public List<BookWithAuthorsDTO> searchWithAuthor(String authorName) {
+        authorName = authorName.trim();
+        if (authorName == null || authorName.isEmpty()) {
+            throw new BadRequestException("Author name can not be null or empty");
+        }
+        List<BookWithAuthorsDTO> books = bookService.searchWithAuthor(authorName);
+        if (books.isEmpty()) {
+            throw new NotFoundException("No books found for the author name: " + authorName);
+        }
+        return books;
+    }
+
+    @GetMapping("/search/title")
+    public List<BookWithAuthorsDTO> searchWithTitle(String title) {
+        title = title.trim();
+        if(title == null || title.isEmpty()) {
+            throw new BadRequestException("Title can not be null or empty");
+        }
+        List<BookWithAuthorsDTO> books = bookService.searchBooksWithTitle(title);
+        return books;
+    }
+
     @PostMapping("/add")
     public ResponseEntity<Book> addBook(@RequestBody BookDTO bookDTO) {
         Book book = bookService.addBook(bookDTO);

@@ -135,8 +135,31 @@ public class BookService {
         return true;
     }
 
+    public BookWithAuthorsDTO searchBook(String isbn) {
+        if (!isValid(isbn)) {
+            throw new BadRequestException("isbn can not be null or empty");
+        }
+        return bookRepository.searchBook(isbn);
+    }
+
     private boolean isValid(String value) {
         return value != null && !value.trim().isEmpty();
+    }
+
+
+    public List<BookWithAuthorsDTO> searchWithAuthor(String authorName) {
+        if(!isValid(authorName)){
+            throw new BadRequestException("Author name can not be null or empty");
+        }
+        return bookRepository.searchBooksWithAuthor(authorName);
+    }
+
+    public List<BookWithAuthorsDTO> searchBooksWithTitle(String title) {
+        if (!isValid(title)) {
+            throw new BadRequestException("Title can not be null or empty");
+            
+        }
+        return bookRepository.searchBooksWithTitle(title);
     }
 
 }

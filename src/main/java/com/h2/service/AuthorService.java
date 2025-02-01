@@ -13,7 +13,7 @@ public class AuthorService {
     private AuthorRepository authorRepository;
 
     public Author findOrCreateAuthor(String name) {
-        // Use Optional to handle null values
+
         return authorRepository.findByName(name)
                 .orElseGet(() -> {
                     Author newAuthor = new Author(name); // Use the constructor

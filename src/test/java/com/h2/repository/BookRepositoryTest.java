@@ -1,6 +1,7 @@
 package com.h2.repository;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.List;
 
@@ -25,6 +26,14 @@ public class BookRepositoryTest {
         for(BookWithAuthorsDTO book : books) {
             System.out.println(">>> Book Title"+book.getTitle());
         }
-
     }
+
+    @Test
+    void testSearchBookWithIsbn() {
+        BookWithAuthorsDTO book = bookRepository.searchBook("978-9-160-4117-8");
+        assertNotNull(book);
+
+        System.out.println(">>> Book TITLE OF BOOK WITH ISBN 978-9-160-4117-8"+book.getTitle());
+    }
+
 }

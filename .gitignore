@@ -1,3 +1,5 @@
 target/
 ProgressInfo.txt
+create_schema_test.sql
 postgre.sql
+DBImporter2.java
