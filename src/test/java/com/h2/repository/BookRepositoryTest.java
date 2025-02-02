@@ -18,22 +18,28 @@ public class BookRepositoryTest {
     @Autowired
     private BookRepository bookRepository;
 
-    @Test
-    void testSearBooks() {
-        List<BookWithAuthorsDTO> books = bookRepository.searchBooks("algorithms");
-        assertFalse(books.isEmpty());
+    /*
+     * SET TEST CASE VALUES ACCORDING TO YOUR DATA 
+     *                  OR 
+     * RUN DBImoporter FILE TO USE FOLLOWING TESTCASES 
+     */
 
-        for(BookWithAuthorsDTO book : books) {
-            System.out.println(">>> Book Title"+book.getTitle());
-        }
-    }
+    // @Test
+    // void testSearBooks() {
+    //     List<BookWithAuthorsDTO> books = bookRepository.searchBooks("algorithms");
+    //     assertFalse(books.isEmpty());
 
-    @Test
-    void testSearchBookWithIsbn() {
-        BookWithAuthorsDTO book = bookRepository.searchBook("978-9-160-4117-8");
-        assertNotNull(book);
+    //     for(BookWithAuthorsDTO book : books) {
+    //         System.out.println(">>> Book Title"+book.getTitle());
+    //     }
+    // }
 
-        System.out.println(">>> Book TITLE OF BOOK WITH ISBN 978-9-160-4117-8"+book.getTitle());
-    }
+    // @Test
+    // void testSearchBookWithIsbn() {
+    //     BookWithAuthorsDTO book = bookRepository.searchBook("978-9-160-4117-8");
+    //     assertNotNull(book);
+
+    //     System.out.println(">>> Book TITLE OF BOOK WITH ISBN 978-9-160-4117-8"+book.getTitle());
+    // }
 
 }

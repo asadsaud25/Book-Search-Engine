@@ -15,20 +15,26 @@ import com.h2.DTO.BookWithAuthorsDTO;
 public class BookControllerTest {
     @Autowired
     private TestRestTemplate restTemplate;
+
+    /*
+     * SET TEST CASE VALUES ACCORDING TO YOUR DATA 
+     *                  OR 
+     * RUN DBImoporter FILE TO USE FOLLOWING TESTCASE
+     */
     
-    @Test
-    void testSearchBooks() {
-        String searchTerm = "algorithm";
-        ResponseEntity<BookWithAuthorsDTO[]> response = restTemplate.getForEntity("/books/search?searchTerm={searchTerm}", BookWithAuthorsDTO[].class, searchTerm);
+    // @Test
+    // void testSearchBooks() {
+    //     String searchTerm = "algorithm";
+    //     ResponseEntity<BookWithAuthorsDTO[]> response = restTemplate.getForEntity("/books/search?searchTerm={searchTerm}", BookWithAuthorsDTO[].class, searchTerm);
 
-        BookWithAuthorsDTO[] books = response.getBody();
-        assertNotNull(books);
-        assertTrue(books.length > 0);
+    //     BookWithAuthorsDTO[] books = response.getBody();
+    //     assertNotNull(books);
+    //     assertTrue(books.length > 0);
 
-        for(BookWithAuthorsDTO book : books) {
-            System.out.println(book);
-        }
-    }
+    //     for(BookWithAuthorsDTO book : books) {
+    //         System.out.println(book);
+    //     }
+    // }
 
     @Test
     void testAddBook() {
