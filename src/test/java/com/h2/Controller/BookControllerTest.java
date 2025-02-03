@@ -16,11 +16,13 @@ public class BookControllerTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    /*
-     * SET TEST CASE VALUES ACCORDING TO YOUR DATA 
-     *                  OR 
-     * RUN DBImoporter FILE TO USE FOLLOWING TESTCASE
-     */
+    /////////////////////////////////////////////////////
+    /*                                                 //
+     * SET TEST CASE VALUES ACCORDING TO YOUR DATA     //
+     *                  OR                             //
+     * RUN DBImoporter FILE TO USE FOLLOWING TESTCASES //
+     */                                                //
+    /////////////////////////////////////////////////////
     
     // @Test
     // void testSearchBooks() {
@@ -44,22 +46,15 @@ public class BookControllerTest {
         System.out.println(book);
     }
     @Test
-    void testAddBookWithDetails() {
-        ResponseEntity<BookWithAuthorsDTO> response = restTemplate.postForEntity("/books/add", null, BookWithAuthorsDTO.class);
-        BookWithAuthorsDTO book = response.getBody();
-        assertNotNull(book);
-        System.out.println(book);
-    }
-    @Test
-    void testAddBookWithDetailsAndAuthors() {
-        ResponseEntity<BookWithAuthorsDTO> response = restTemplate.postForEntity("/books/add", null, BookWithAuthorsDTO.class);
-        BookWithAuthorsDTO book = response.getBody();
-        assertNotNull(book);
-        System.out.println(book);
-    }
-    @Test
     void testUpdateBook() {
         ResponseEntity<BookWithAuthorsDTO> response = restTemplate.postForEntity("/books/update", null, BookWithAuthorsDTO.class);
+        BookWithAuthorsDTO book = response.getBody();
+        assertNotNull(book);
+        System.out.println(book);
+    }
+    @Test
+    void testDeleteBook() {
+        ResponseEntity<BookWithAuthorsDTO> response = restTemplate.postForEntity("/books/delete", null, BookWithAuthorsDTO.class);
         BookWithAuthorsDTO book = response.getBody();
         assertNotNull(book);
         System.out.println(book);

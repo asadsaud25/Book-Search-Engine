@@ -1,91 +1,119 @@
--- We are using PostgreSQL 16.4
+-- Create the authors sequence
+CREATE SEQUENCE IF NOT EXISTS public.authors_author_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
--- CSV Header is below
--- bookId,title,author,rating,description,language,isbn,bookFormat,edition,pages,publisher,publishDate,firstPublishDate,likedPercent,price
+ALTER SEQUENCE public.authors_author_id_seq OWNER TO admin;
 
--- Create the authors table (This needs to be created FIRST due to foreign key constraints)
-CREATE TABLE IF NOT EXISTS authors (
-    author_id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL UNIQUE
+-- Create the authors table
+CREATE TABLE IF NOT EXISTS public.authors (
+    author_id integer NOT NULL DEFAULT nextval('public.authors_author_id_seq'::regclass),
+    name character varying(255) NOT NULL,
+    CONSTRAINT authors_pkey PRIMARY KEY (author_id),
+    CONSTRAINT authors_name_unique UNIQUE (name)
 );
+
+ALTER TABLE public.authors OWNER TO admin;
+ALTER SEQUENCE public.authors_author_id_seq OWNED BY public.authors.author_id;
+
+
+-- Create the books sequence
+CREATE SEQUENCE IF NOT EXISTS public.books_book_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+ALTER SEQUENCE public.books_book_id_seq OWNER TO admin;
 
 -- Create the books table
-CREATE TABLE IF NOT EXISTS books (
-    book_id SERIAL PRIMARY KEY,  -- Explicitly name the primary key column
-    title VARCHAR(255) NOT NULL,
-    rating DECIMAL(2,1) NOT NULL,
-    description TEXT NOT NULL,
-    language VARCHAR(255) NOT NULL,
-    isbn VARCHAR(255) NOT NULL UNIQUE, -- Unique constraint directly on the column
-    book_format VARCHAR(255) NOT NULL,
-    edition VARCHAR(255) NOT NULL,
-    pages INT NOT NULL,
-    publisher VARCHAR(255) NOT NULL,
-    publish_date DATE NOT NULL,
-    first_publish_date DATE NOT NULL,
-    liked_percent DECIMAL(5,2) NOT NULL,
-    price DECIMAL(5,2) NOT NULL,
-    search_vector tsvector -- Add the search_vector column
+CREATE TABLE IF NOT EXISTS public.books (
+    book_id bigint NOT NULL DEFAULT nextval('public.books_book_id_seq'::regclass),
+    title character varying(255) NOT NULL,
+    rating numeric(38,2),
+    description text,
+    language character varying(255),
+    isbn character varying(255),
+    book_format character varying(255),
+    edition character varying(255),
+    pages integer,
+    publisher character varying(255),
+    publish_date date,
+    first_publish_date date,
+    liked_percent numeric(38,2),
+    price numeric(38,2),
+    search_vector tsvector,
+    CONSTRAINT books_pkey PRIMARY KEY (book_id),
+    CONSTRAINT unique_isbn UNIQUE (isbn)
 );
+
+ALTER TABLE public.books OWNER TO admin;
+ALTER SEQUENCE public.books_book_id_seq OWNED BY public.books.book_id;
 
 
 -- Create the books_authors table
-CREATE TABLE IF NOT EXISTS books_authors (
-    book_id INT NOT NULL,
-    author_id INT NOT NULL,
-    PRIMARY KEY (book_id, author_id),
-    FOREIGN KEY (book_id) REFERENCES books (book_id),
-    FOREIGN KEY (author_id) REFERENCES authors (author_id)
+CREATE TABLE IF NOT EXISTS public.books_authors (
+    book_id integer NOT NULL,
+    author_id integer NOT NULL,
+    CONSTRAINT book_authors_pkey PRIMARY KEY (book_id, author_id),
+    FOREIGN KEY (author_id) REFERENCES public.authors(author_id),
+    FOREIGN KEY (book_id) REFERENCES public.books(book_id)
 );
 
--- Function to update the search vector
-CREATE OR REPLACE FUNCTION update_search_vector()
-RETURNS TRIGGER AS $$
+ALTER TABLE public.books_authors OWNER TO admin;
+
+-- Create the update_search_vector function (must be before the trigger)
+CREATE OR REPLACE FUNCTION public.update_search_vector() RETURNS trigger
+    LANGUAGE plpgsql
+AS $$
 BEGIN
-    NEW.search_vector := 
+    NEW.search_vector :=
         setweight(to_tsvector('english', coalesce(NEW.title, '')), 'A') ||
         setweight(to_tsvector('english', coalesce(NEW.description, '')), 'B') ||
         setweight(to_tsvector('english', coalesce(NEW.isbn, '')), 'C');
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$;
 
--- Trigger to automatically update the search vector
-CREATE OR REPLACE TRIGGER update_search_vector_trigger  -- Use CREATE OR REPLACE
-BEFORE INSERT OR UPDATE ON books
-FOR EACH ROW
-EXECUTE FUNCTION update_search_vector();
+ALTER FUNCTION public.update_search_vector() OWNER TO admin;
+
+-- Create the trigger (depends on the function)
+CREATE OR REPLACE TRIGGER update_search_vector_trigger
+BEFORE INSERT OR UPDATE ON public.books
+FOR EACH ROW EXECUTE FUNCTION public.update_search_vector();
 
 
--- Initial update of search_vector for existing data (if any)
--- This is necessary if you are migrating data or adding the search_vector
--- column to an existing table.  It's safe to run even on a new database.
--- It will just not do anything if the table is empty.
-
--- Create the book_with_authors view (CREATE OR REPLACE)
-CREATE OR REPLACE VIEW book_with_authors AS
-SELECT 
-    b.book_id AS bookId, 
-    b.title, 
-    b.rating, 
-    b.description, 
-    b.language, 
-    b.isbn, 
-    b.book_format AS bookFormat, 
-    b.edition, 
-    b.pages, 
-    b.publisher, 
-    b.publish_date AS publishDate, 
-    b.first_publish_date AS firstPublishDate, 
-    b.liked_percent AS likedPercent, 
-    b.price, 
-    STRING_AGG(a.name, ', ') AS authors,    
-    b.search_vector::text AS searchVector  
-FROM books b
-JOIN books_authors ba ON b.book_id = ba.book_id
-JOIN authors a ON ba.author_id = a.author_id
+-- Create the book_with_authors view (depends on tables)
+CREATE OR REPLACE VIEW public.book_with_authors AS
+SELECT b.book_id AS bookid,
+    b.title,
+    b.rating,
+    b.description,
+    b.language,
+    b.isbn,
+    b.book_format AS bookformat,
+    b.edition,
+    b.pages,
+    b.publisher,
+    b.publish_date AS publishdate,
+    b.first_publish_date AS firstpublishdate,
+    b.liked_percent AS likedpercent,
+    b.price,
+    string_agg((a.name)::text, ', '::text) AS authors,
+    (b.search_vector)::text AS search_vector
+FROM ((public.books b
+    JOIN public.books_authors ba ON ((b.book_id = ba.book_id)))
+    JOIN public.authors a ON ((ba.author_id = a.author_id)))
 GROUP BY b.book_id, b.search_vector;
 
--- Create the index on the search_vector column (GIN index)
--- it is important to create an index on the search_vector column for efficient searching
-CREATE INDEX idx_search_vector ON books USING gin (search_vector);
+ALTER VIEW public.book_with_authors OWNER TO admin;
+
+-- Create indexes (can be last)
+CREATE INDEX IF NOT EXISTS books_search_idx ON public.books USING gin (search_vector);
+CREATE INDEX IF NOT EXISTS idx_search_vector ON public.books USING gin (search_vector);
