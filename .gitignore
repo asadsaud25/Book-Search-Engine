@@ -1,4 +1,4 @@
-target/**
+target/
 ProgressInfo.md
 create_schema_test.sql
 postgre.sql
