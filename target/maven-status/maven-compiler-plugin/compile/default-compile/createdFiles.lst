@@ -13,6 +13,5 @@ com\h2\entity\Author.class
 com\h2\Controller\HelloController.class
 com\h2\repository\BookRepository.class
 com\h2\Exception\ErrorResponse.class
-com\h2\DBImporter2.class
 com\h2\App.class
 com\h2\service\AuthorService.class
