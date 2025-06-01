@@ -1,4 +1,4 @@
-package com.h2.model;
+package com.h2.Model;
 
 import lombok.Getter;
 import lombok.Setter;

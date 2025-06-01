@@ -1,10 +1,10 @@
-package com.h2.service;
+package com.h2.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.h2.entity.Author;
-import com.h2.repository.AuthorRepository;
+import com.h2.Entity.Author;
+import com.h2.Repository.AuthorRepository;
 
 @Service
 public class AuthorService {

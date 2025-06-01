@@ -1,4 +1,4 @@
-package com.h2.service;
+package com.h2.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +13,10 @@ import com.h2.DTO.BookDTO;
 import com.h2.DTO.BookWithAuthorsDTO;
 import com.h2.Exception.BadRequestException;
 import com.h2.Exception.NotFoundException;
-import com.h2.entity.Author;
-import com.h2.entity.Book;
-import com.h2.repository.AuthorRepository;
-import com.h2.repository.BookRepository;
+import com.h2.Entity.Author;
+import com.h2.Entity.Book;
+import com.h2.Repository.AuthorRepository;
+import com.h2.Repository.BookRepository;
 
 @Service
 public class BookService {

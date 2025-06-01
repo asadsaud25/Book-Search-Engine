@@ -1,4 +1,4 @@
-package com.h2.entity;
+package com.h2.Entity;
 
 import java.math.BigDecimal;
 import java.sql.Date;
