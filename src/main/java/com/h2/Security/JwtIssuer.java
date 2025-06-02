@@ -9,13 +9,14 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
 public class JwtIssuer {
 
     private final JwtProperties properties;
-    public String issue(long userId, String email, List<String> roles){
+    public String issue(UUID userId, String email, List<String> roles){
 
         return JWT.create()
                 .withSubject(String.valueOf(userId))
