@@ -1,4 +1,4 @@
-package com.h2.repository;
+package com.h2.Repository;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

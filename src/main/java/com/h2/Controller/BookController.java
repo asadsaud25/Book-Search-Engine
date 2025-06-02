@@ -18,8 +18,8 @@ import com.h2.DTO.BookDTO;
 import com.h2.DTO.BookWithAuthorsDTO;
 import com.h2.Exception.BadRequestException;
 import com.h2.Exception.NotFoundException;
-import com.h2.entity.Book;
-import com.h2.service.BookService;
+import com.h2.Entity.Book;
+import com.h2.Service.BookService;
 
 @RestController
 @RequestMapping("/books")
