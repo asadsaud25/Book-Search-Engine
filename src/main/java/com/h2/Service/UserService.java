@@ -1,7 +1,6 @@
 package com.h2.Service;
 
-import com.h2.Entity.UserEntity;
-import com.h2.Entity.Users;
+import com.h2.Entity.User;
 import com.h2.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,11 +14,11 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public Optional<Users> findByEmail(String email) {
+    public Optional<User> findByEmail(String email) {
         if (email.isEmpty()) return Optional.empty();
         return userRepository.findByEmail(email);
     }
-    public Optional<Users> findByUsername(String username) {
+    public Optional<User> findByUsername(String username) {
         if (username.isEmpty()) return Optional.empty();
         return userRepository.findByUsername(username);
     }

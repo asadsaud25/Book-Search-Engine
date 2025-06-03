@@ -1,28 +1,26 @@
 package com.h2.Entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
-@Getter
-@Setter
 @Entity
 @Data
 @Table(name = "users")
 @ToString
-public class Users {
+public class User {
 
     @Id
     @Column(name = "id")
+    @GeneratedValue(generator = "uuid-gen")
+    @GenericGenerator(name = "uuid-gen", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
     @Column(name = "username", unique = true, nullable = false, length = 50)

@@ -36,7 +36,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(registry -> registry
                         .requestMatchers("/hello").permitAll()
                         .requestMatchers("/books/search/**").permitAll()
-                        .requestMatchers("/auth/login").permitAll()
+                        .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/books/**").hasRole("ADMIN")
                         .anyRequest().authenticated());
