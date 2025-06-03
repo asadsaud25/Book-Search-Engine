@@ -34,9 +34,11 @@ public class WebSecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .securityMatcher("/**")
                 .authorizeHttpRequests(registry -> registry
-                        .requestMatchers("/").permitAll()
+                        .requestMatchers("/hello").permitAll()
                         .requestMatchers("/books/search/**").permitAll()
                         .requestMatchers("/auth/login").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/books/**").hasRole("ADMIN")
                         .anyRequest().authenticated());
 
         return  http.build();
@@ -54,6 +56,5 @@ public class WebSecurityConfig {
                 .userDetailsService(customUserDetailService)
                 .passwordEncoder(passwordEncoder())
                 .and().build();
-
     }
 }

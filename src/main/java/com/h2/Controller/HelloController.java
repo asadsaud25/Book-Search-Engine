@@ -19,4 +19,11 @@ public class HelloController {
                 + principal.getEmail() + " User Id: " + principal.getUserId()
                 + " User Role: " + principal.getAuthorities();
     }
+
+    @GetMapping("/admin")
+    public String admin(@AuthenticationPrincipal UserPrincipal principal) {
+        return "if you see this than you're logged in as admin: "
+                + principal.getEmail() + " User Id: " + principal.getUserId()
+                + " User Role: " + principal.getAuthorities();
+    }
 }
