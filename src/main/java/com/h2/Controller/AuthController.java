@@ -29,7 +29,7 @@ public class AuthController {
     }
 
     @PutMapping("/admin/changeRole")
-    public ChangeRoleResponse changeRole(@RequestBody ChangeRoleRequest request) {
+    public ChangeRoleResponse changeRole(@RequestBody @Validated ChangeRoleRequest request) {
 
         return changeRoleService.changeRole(request.getUsername(), request.getIsAdmin());
     }
