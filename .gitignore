@@ -6,3 +6,4 @@ postgre.sql
 DBImporter2.java
 application.properties.txt
 BookSearch.iml
+.env

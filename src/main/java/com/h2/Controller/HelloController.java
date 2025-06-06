@@ -10,7 +10,7 @@ public class HelloController {
 
     @GetMapping("/hello")
     public String sayHello() {
-        return "Hello, Spring!";
+        return "Hello, there!\nPlease login to use Book Search Engine";
     }
 
     @GetMapping("/secured")
