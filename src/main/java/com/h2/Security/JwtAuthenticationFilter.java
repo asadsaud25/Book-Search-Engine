@@ -23,9 +23,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         extractTokenFromRequest(request)
                 .map(jwtDecoder::decode)
-                        .map(jwtToPrincipalConverter::convert)
-                                .map(UserPrincipalAuthenticationToken::new)
-                                        .ifPresent(authentication -> SecurityContextHolder.getContext().setAuthentication(authentication));
+                .map(jwtToPrincipalConverter::convert)
+                .map(UserPrincipalAuthenticationToken::new)
+                .ifPresent(authentication -> SecurityContextHolder.getContext().setAuthentication(authentication));
 
         filterChain.doFilter(request, response);
     }
