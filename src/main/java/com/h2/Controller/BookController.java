@@ -71,7 +71,7 @@ public class BookController {
     @GetMapping("/search/title")
     public List<BookWithAuthorsDTO> searchWithTitle(String title) {
         title = title.trim();
-        if(title == null || title.isEmpty()) {
+        if(title.isEmpty()) {
             throw new BadRequestException("Title can not be null or empty");
         }
         List<BookWithAuthorsDTO> books = bookService.searchBooksWithTitle(title);
