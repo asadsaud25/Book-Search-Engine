@@ -21,12 +21,22 @@ import com.h2.Exception.NotFoundException;
 import com.h2.Entity.Book;
 import com.h2.Service.BookService;
 
+/**
+ * REST controller for managing books and book search operations.
+ */
 @RestController
 @RequestMapping("/books")
 public class BookController {
     @Autowired
     private BookService bookService;
 
+    /**
+     * Search for books using a general search term.
+     * @param searchTerm The term to search for.
+     * @return List of books matching the search term.
+     * @throws BadRequestException if the search term is invalid.
+     * @throws NotFoundException if no books are found.
+     */
     @GetMapping("/search")
     public List<BookWithAuthorsDTO> searchBooks(@RequestParam String searchTerm) {
         if (searchTerm == null || searchTerm.isEmpty()) {
@@ -48,13 +58,24 @@ public class BookController {
         return books;
     }
 
+    /**
+     * Search for a book by its ISBN.
+     * @param isbn The ISBN of the book.
+     * @return Book details with authors.
+     */
     @GetMapping("/search/{isbn}")
     public BookWithAuthorsDTO searchBook(@PathVariable String isbn){ 
         BookWithAuthorsDTO book = bookService.searchBook(isbn);
         return book;
-
     }
 
+    /**
+     * Search for books by author name.
+     * @param authorName The author's name.
+     * @return List of books by the author.
+     * @throws BadRequestException if the author name is invalid.
+     * @throws NotFoundException if no books are found.
+     */
     @GetMapping("/search/author")
     public List<BookWithAuthorsDTO> searchWithAuthor(String authorName) {
         authorName = authorName.trim();
@@ -68,6 +89,12 @@ public class BookController {
         return books;
     }
 
+    /**
+     * Search for books by title.
+     * @param title The book title.
+     * @return List of books with the given title.
+     * @throws BadRequestException if the title is invalid.
+     */
     @GetMapping("/search/title")
     public List<BookWithAuthorsDTO> searchWithTitle(String title) {
         title = title.trim();
@@ -78,12 +105,24 @@ public class BookController {
         return books;
     }
 
+    /**
+     * Add a new book to the database.
+     * @param bookDTO The book data.
+     * @return The added book.
+     */
     @PostMapping("/add")
     public ResponseEntity<Book> addBook(@RequestBody BookDTO bookDTO) {
         Book book = bookService.addBook(bookDTO);
         return ResponseEntity.ok(book);
     }
 
+    /**
+     * Update an existing book by ISBN.
+     * @param bookDTO The updated book data.
+     * @param isbn The ISBN of the book to update.
+     * @return The updated book.
+     * @throws NotFoundException if the book is not found.
+     */
     @PutMapping("/update/{isbn}")
     public ResponseEntity<Book> updateBook(@RequestBody BookDTO bookDTO, @PathVariable String isbn) {
         Book updatedBook = bookService.updateBook(bookDTO, isbn);
@@ -94,6 +133,12 @@ public class BookController {
         return ResponseEntity.ok(updatedBook);
     }
 
+    /**
+     * Delete a book by ISBN.
+     * @param isbn The ISBN of the book to delete.
+     * @return Success message.
+     * @throws NotFoundException if the book is not found.
+     */
     @DeleteMapping("/delete/{isbn}")
     public ResponseEntity<String> deleteBook(@PathVariable String isbn) {
         boolean isDeleted = bookService.deleteBook(isbn);

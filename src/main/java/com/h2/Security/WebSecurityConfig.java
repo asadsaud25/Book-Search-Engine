@@ -14,6 +14,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * Security configuration for the application.
+ * Configures JWT authentication, endpoint access rules, and custom handlers.
+ */
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -24,6 +28,18 @@ public class WebSecurityConfig {
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
+    /**
+     * Configures the security filter chain for HTTP requests.
+     * - Disables CORS, CSRF, and form login.
+     * - Sets session management to stateless.
+     * - Adds JWT authentication filter.
+     * - Configures endpoint access rules.
+     * - Sets custom authentication and access denied handlers.
+     *
+     * @param http the HttpSecurity object
+     * @return the configured SecurityFilterChain
+     * @throws Exception if an error occurs during configuration
+     */
     @Bean
     public SecurityFilterChain applicationSecurity(HttpSecurity http) throws Exception {
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -49,11 +65,21 @@ public class WebSecurityConfig {
         return  http.build();
     }
 
+    /**
+     * Provides a BCrypt password encoder bean.
+     * @return PasswordEncoder instance
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Configures the authentication manager with custom user details service and password encoder.
+     * @param http the HttpSecurity object
+     * @return AuthenticationManager instance
+     * @throws Exception if an error occurs during configuration
+     */
     @SuppressWarnings("removal")
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
