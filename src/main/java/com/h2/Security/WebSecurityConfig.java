@@ -52,11 +52,11 @@ public class WebSecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .securityMatcher("/**")
                 .authorizeHttpRequests(registry -> registry
-                        .requestMatchers("/hello").permitAll()
-                        .requestMatchers("/books/search/**").permitAll()
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/books/**").hasRole("ADMIN")
+                        .requestMatchers("/hello", "/auth/**").permitAll()
+                        .requestMatchers("/books/search").permitAll()
+//                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/admin/**", "/books/crud/**").hasRole("ADMIN")
+//                        .requestMatchers("/books/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .exceptionHandling(exceptions -> exceptions
                         .authenticationEntryPoint(customAuthenticationEntryPoint)

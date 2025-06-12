@@ -110,10 +110,10 @@ public class BookController {
      * @param bookDTO The book data.
      * @return The added book.
      */
-    @PostMapping("/add")
-    public ResponseEntity<Book> addBook(@RequestBody BookDTO bookDTO) {
+    @PostMapping("/crud/add")
+    public ResponseEntity<String> addBook(@RequestBody BookDTO bookDTO) {
         Book book = bookService.addBook(bookDTO);
-        return ResponseEntity.ok(book);
+        return ResponseEntity.ok("Book with ISBN: " + book.getIsbn() + " added successfully");
     }
 
     /**
@@ -123,14 +123,14 @@ public class BookController {
      * @return The updated book.
      * @throws NotFoundException if the book is not found.
      */
-    @PutMapping("/update/{isbn}")
-    public ResponseEntity<Book> updateBook(@RequestBody BookDTO bookDTO, @PathVariable String isbn) {
+    @PutMapping("/crud/update/{isbn}")
+    public ResponseEntity<String> updateBook(@RequestBody BookDTO bookDTO, @PathVariable String isbn) {
         Book updatedBook = bookService.updateBook(bookDTO, isbn);
 
         if(updatedBook == null) {
             throw new NotFoundException("Book with ISBN: " + isbn + " not found");
         }
-        return ResponseEntity.ok(updatedBook);
+        return ResponseEntity.ok("Book with ISBN: " + updatedBook.getIsbn() + " updated successfully");
     }
 
     /**
@@ -139,7 +139,7 @@ public class BookController {
      * @return Success message.
      * @throws NotFoundException if the book is not found.
      */
-    @DeleteMapping("/delete/{isbn}")
+    @DeleteMapping("crud/delete/{isbn}")
     public ResponseEntity<String> deleteBook(@PathVariable String isbn) {
         boolean isDeleted = bookService.deleteBook(isbn);
 
